@@ -1,0 +1,13 @@
+W:\source\repos\OS_lab_1\OS_lab_1\bin\Debug\netcoreapp3.0\OS_lab_1.exe
+W:\source\repos\OS_lab_1\OS_lab_1\bin\Debug\netcoreapp3.0\OS_lab_1.deps.json
+W:\source\repos\OS_lab_1\OS_lab_1\bin\Debug\netcoreapp3.0\OS_lab_1.runtimeconfig.json
+W:\source\repos\OS_lab_1\OS_lab_1\bin\Debug\netcoreapp3.0\OS_lab_1.runtimeconfig.dev.json
+W:\source\repos\OS_lab_1\OS_lab_1\bin\Debug\netcoreapp3.0\OS_lab_1.dll
+W:\source\repos\OS_lab_1\OS_lab_1\bin\Debug\netcoreapp3.0\OS_lab_1.pdb
+W:\source\repos\OS_lab_1\OS_lab_1\obj\Debug\netcoreapp3.0\OS_lab_1.csprojAssemblyReference.cache
+W:\source\repos\OS_lab_1\OS_lab_1\obj\Debug\netcoreapp3.0\OS_lab_1.AssemblyInfoInputs.cache
+W:\source\repos\OS_lab_1\OS_lab_1\obj\Debug\netcoreapp3.0\OS_lab_1.AssemblyInfo.cs
+W:\source\repos\OS_lab_1\OS_lab_1\obj\Debug\netcoreapp3.0\OS_lab_1.dll
+W:\source\repos\OS_lab_1\OS_lab_1\obj\Debug\netcoreapp3.0\OS_lab_1.pdb
+W:\source\repos\OS_lab_1\OS_lab_1\obj\Debug\netcoreapp3.0\OS_lab_1.csproj.CoreCompileInputs.cache
+W:\source\repos\OS_lab_1\OS_lab_1\obj\Debug\netcoreapp3.0\OS_lab_1.genruntimeconfig.cache
