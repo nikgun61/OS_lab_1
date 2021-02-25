@@ -52,6 +52,16 @@ namespace OS_lab_1
             command[10, 0] = "Cp";
             command[10, 1] = "Копирование файла. Имя файла указывается через пробел.";
 
+            //FileStream.Чтение и запись файла
+            command[11, 0] = "FSWrite";
+            command[11, 1] = "Запись в файл. Имя файла указывается через пробел.";
+
+            command[12, 0] = "FSRead";
+            command[12, 1] = "Чтение из файла. Имя файла указывается через пробел.";
+
+
+
+
             command[18, 0] = "Bash";
             command[19, 0] = "Fuck";
             MaxCommands--; //убираю одно значение для цикла for (костыль (^__^'))
@@ -113,12 +123,29 @@ namespace OS_lab_1
 
                     case 8:
                         Rm(UserPath, UserVar);
+                        UserPath = Ls(UserPath, UserVar);
+                        Console.WriteLine("Файл " + UserVar + " удалён.");
                         break;
 
                     case 9:
+                        UserPath = Mv(UserPath, UserVar);
+                        UserPath = Ls(UserPath, UserVar);
+                        Console.WriteLine("Файл " + UserVar + " перемещён.");
+                        break;
+
+                    case 10:
                         UserPath = Cp(UserPath, UserVar);
                         UserPath = Ls(UserPath, UserVar);
                         Console.WriteLine("Файл " + UserVar + " скопирован.");
+                        break;
+
+                    case 11:
+                        FSWrite(UserPath, UserVar);
+                        FSRead(UserPath, UserVar);
+                        break;
+
+                    case 12:
+                        FSRead(UserPath, UserVar);
                         break;
 
                     case 18:
@@ -339,6 +366,40 @@ namespace OS_lab_1
                 // File.Copy(path, newPath, true);
             }
             return UserPath;
+        }
+
+        static void FSWrite(string UserPath, string UserVar)
+        {
+            UserVar = AddBackSlash(UserPath, UserVar);
+            UserPath += UserVar;
+            Console.WriteLine("Введите строку для записи в файл:");
+            string text = Console.ReadLine();
+            // запись в файл
+            using (FileStream fstream = new FileStream($"{UserPath}", FileMode.OpenOrCreate))
+            {
+                // преобразуем строку в байты
+                byte[] array = System.Text.Encoding.Default.GetBytes(text);
+                // запись массива байтов в файл
+                fstream.Write(array, 0, array.Length);
+                Console.WriteLine("Текст записан в файл.");
+            }
+        }
+
+        static void FSRead(string UserPath, string UserVar)
+        {
+            UserVar = AddBackSlash(UserPath, UserVar);
+            UserPath += UserVar;
+            // чтение из файла
+            using (FileStream fstream = File.OpenRead($"{UserPath}"))
+            {
+                // преобразуем строку в байты
+                byte[] array = new byte[fstream.Length];
+                // считываем данные
+                fstream.Read(array, 0, array.Length);
+                // декодируем байты в строку
+                string textFromFile = System.Text.Encoding.Default.GetString(array);
+                Console.WriteLine($"Текст из файла: {textFromFile}");
+            }
         }
     }
 }
