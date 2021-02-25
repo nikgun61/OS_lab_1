@@ -12,7 +12,7 @@ namespace OS_lab_1
         {
             StringComparer comparer = StringComparer.OrdinalIgnoreCase; //для сравнения строк без учёта регистра
 
-            int MaxCommands = 10;
+            int MaxCommands = 20;
             int ComID = 0;
             string UserPath = null;
 
@@ -20,25 +20,40 @@ namespace OS_lab_1
 
             command[0, 0] = "exit";
 
+            // Работа с каталогами и дисками
+            command[1, 0] = "Cd";
+            command[1, 1] = "Возвращение в домашний каталог и выведение информации в консоль о логических дисках, именах, метке тома, размере типе файловой системы.";
 
-            command[1, 0] = "cd";
-            command[1, 1] = "Возвращает в домашний каталог и выводит информацию в консоль о логических дисках, именах, метке тома, размере типе файловой системы.";
+            command[2, 0] = "Ls";
+            command[2, 1] = "Получение списка файлов и подкаталогов в текущем каталоге, для перехода в нужный - введите адрес через пробел, начиная с текущего положения (для возвращения используется cd => ls и путь, куда необходимо попасть).";
 
-            command[2, 0] = "ls";
-            command[2, 1] = "Получение списка файлов и подкаталогов в текущем каталоге, для перехода в нужный - введите адрес через пробел (для возвращения используется cd => ls и путь, куда необходимо попасть).";
+            command[3, 0] = "Mkdir";
+            command[3, 1] = "Создаёт новый каталог в текущем каталоге. Имя каталога указывается через пробел.";
 
-            command[3, 0] = "mkdir";
-            command[3, 1] = "Создаёт новый каталог в текущем каталоге.";
+            command[4, 0] = "Pwd";
+            command[4, 1] = "Получение информации о текущем каталоге. Имя каталога указывается через пробел.";
 
-            command[4, 0] = "pwd";
-            command[4, 1] = "Получение информации о текущем каталоге";
+            command[5, 0] = "Rmdir";
+            command[5, 1] = "Удаление каталога. Имя каталога указывается через пробел.";
 
-            command[5, 0] = "rmdir";
-            command[5, 1] = "Удаление каталога";
+            command[6, 0] = "Mvdir";
+            command[6, 1] = "Перемещение каталога. Имя каталога указывается через пробел.";
 
-            command[6, 0] = "mv";
+            //Работа с файлами. Классы File и FileInfo
+            command[7, 0] = "Stat";
+            command[7, 1] = "Получение информации о файле. Имя файла указывается через пробел.";
 
-            command[9, 0] = "fuck";
+            command[8, 0] = "Rm";
+            command[8, 1] = "Удаление файла. Имя файла указывается через пробел.";
+
+            command[9, 0] = "Mv";
+            command[9, 1] = "Перемещение файла. Имя файла указывается через пробел.";
+            
+            command[10, 0] = "Cp";
+            command[10, 1] = "Копирование файла. Имя файла указывается через пробел.";
+
+            command[18, 0] = "Bash";
+            command[19, 0] = "Fuck";
             MaxCommands--; //убираю одно значение для цикла for (костыль (^__^'))
 
 
@@ -59,7 +74,7 @@ namespace OS_lab_1
                 switch (ComID)
                 {
                     case 0:
-                        Console.WriteLine("Неизвестная команда '" + UserCommand + "'. Для обзора доступных команд введите bash");
+                        Console.WriteLine("Неизвестная команда '" + UserCommand + "'. Для обзора доступных команд введите Bash");
                         break;
 
                     case 1:
@@ -82,13 +97,38 @@ namespace OS_lab_1
 
                     case 5:
                         Rmdir(UserPath, UserVar);
+                        UserPath = Ls(UserPath, UserVar);
+                        Console.WriteLine("Каталог " + UserVar + " удалён.");
                         break;
 
                     case 6:
-                        UserPath = Mv(UserPath, UserVar);
+                        UserPath = Mvdir(UserPath, UserVar);
+                        UserPath = Ls(UserPath, UserVar);
+                        Console.WriteLine("Новый файл " + UserVar + " создан.");
+                        break;
+
+                    case 7:
+                        Stat(UserPath, UserVar);
+                        break;
+
+                    case 8:
+                        Rm(UserPath, UserVar);
                         break;
 
                     case 9:
+                        UserPath = Cp(UserPath, UserVar);
+                        UserPath = Ls(UserPath, UserVar);
+                        Console.WriteLine("Файл " + UserVar + " скопирован.");
+                        break;
+
+                    case 18:
+                        for (int i = 1; i < (MaxCommands-1); i++)
+                        {
+                            Console.WriteLine(" " + command[i, 0] + " - " + command[i, 1]);
+                        }
+                        break;
+
+                    case 19:
                         Console.WriteLine("hey you, mazafaka, tired enough? Its time for D oh double G");
                         break;
                 }
@@ -131,18 +171,21 @@ namespace OS_lab_1
         }
 
         //ебать копать костыль, я с ним возился больше часа, если кто-то знает вариант попроще, как проверить и, если что, добавить "\" - подскажите пожалуйста
-        public static string AddBackSlash(string Input)
+        public static string AddBackSlash(string UserPath, string UserVar)
         {
+            if (UserPath == null)
+                return UserVar;
+            
             string BackSlash = @"\";
-            var chars = Input.ToCharArray();
+            var chars = UserVar.ToCharArray();
             for (int i = 0; i < 1; i++)
             {
                 string f = null;
                 f += chars[i];
                 if (string.Compare(f, BackSlash, true) != 0)
-                    Input = BackSlash + Input;
+                    UserVar = BackSlash + UserVar;
             }         
-            return Input;
+            return UserVar;
         }
 
         static string Cd()
@@ -166,7 +209,7 @@ namespace OS_lab_1
 
         static string Ls(string UserPath, string UserVar)
         {
-            UserVar = AddBackSlash(UserVar);
+            UserVar = AddBackSlash(UserPath, UserVar);
             UserPath += UserVar;
 
             if (Directory.Exists(UserPath))
@@ -190,7 +233,7 @@ namespace OS_lab_1
 
         static string Mkdir(string UserPath, string UserVar)
         {
-            UserVar = AddBackSlash(UserVar);
+            UserVar = AddBackSlash(UserPath, UserVar);
             DirectoryInfo dirInfo = new DirectoryInfo(UserPath);
             if (!dirInfo.Exists)
             {
@@ -212,13 +255,13 @@ namespace OS_lab_1
 
         static void Rmdir(string UserPath, string UserVar)
         {
-            UserVar = AddBackSlash(UserVar);
+            UserVar = AddBackSlash(UserPath, UserVar);
             UserPath += UserVar;
             try
             {
                 DirectoryInfo dirInfo = new DirectoryInfo(UserPath);
                 dirInfo.Delete(true);
-                Console.WriteLine("Каталог удален");
+                Console.WriteLine("Каталог" + UserVar + "удален.");
             }
             catch (Exception ex)
             {
@@ -226,9 +269,9 @@ namespace OS_lab_1
             }
         }
 
-        static string Mv (string UserPath, string UserVar)
+        static string Mvdir (string UserPath, string UserVar)
         {
-            UserVar = AddBackSlash(UserVar);
+            UserVar = AddBackSlash(UserPath, UserVar);
             Console.WriteLine("Старый путь до папки: " + UserPath + " , введите новый путь: ");
             UserPath += UserVar;
             string NewPath = Console.ReadLine() + UserVar;
@@ -236,6 +279,64 @@ namespace OS_lab_1
             if (dirInfo.Exists && Directory.Exists(NewPath) == false)
             {
                 dirInfo.MoveTo(NewPath);
+            }
+            return UserPath;
+        }
+
+        static void Stat(string UserPath, string UserVar)
+        {
+            UserVar = AddBackSlash(UserPath, UserVar);
+            UserPath += UserVar;
+            FileInfo fileInf = new FileInfo(UserPath);
+            if (fileInf.Exists)
+            {
+                Console.WriteLine("Имя файла: {0}", fileInf.Name);
+                Console.WriteLine("Время создания: {0}", fileInf.CreationTime);
+                Console.WriteLine("Размер: {0}", fileInf.Length);
+            }
+        }
+
+        static void Rm(string UserPath, string UserVar)
+        {
+            UserVar = AddBackSlash(UserPath, UserVar);
+            UserPath += UserVar;
+            FileInfo fileInf = new FileInfo(UserPath);
+            if (fileInf.Exists)
+            {
+                fileInf.Delete();
+                // альтернатива с помощью класса File
+                // File.Delete(path);
+            }
+        }
+
+        static string Mv(string UserPath, string UserVar)
+        {
+            UserVar = AddBackSlash(UserPath, UserVar);
+            Console.WriteLine("Старый путь до папки: " + UserPath + " , введите новый путь: ");
+            UserPath += UserVar;
+            string NewPath = Console.ReadLine() + UserVar;
+            FileInfo fileInf = new FileInfo(UserPath);
+            if (fileInf.Exists)
+            {
+                fileInf.MoveTo(NewPath);
+                // альтернатива с помощью класса File
+                // File.Move(path, newPath);
+            }
+            return UserPath;
+        }
+
+        static string Cp(string UserPath, string UserVar)
+        {
+            UserVar = AddBackSlash(UserPath, UserVar);
+            Console.WriteLine("Введите путь, куда скопировать папку: ");
+            UserPath += UserVar;
+            string NewPath = Console.ReadLine() + UserVar;
+            FileInfo fileInf = new FileInfo(UserPath);
+            if (fileInf.Exists)
+            {
+                fileInf.CopyTo(NewPath, true);
+                // альтернатива с помощью класса File
+                // File.Copy(path, newPath, true);
             }
             return UserPath;
         }
